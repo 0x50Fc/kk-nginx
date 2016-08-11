@@ -66,8 +66,8 @@ COPY ./conf/nginx.conf conf/nginx.conf
 
 EXPOSE 80
 
-VOLUME ["/data"]  
+VOLUME ["/usr/local/logs"]  
 
-COPY ./@app /data/@app
+COPY ./@app /@app
 
 CMD nginx -g "daemon off;"
