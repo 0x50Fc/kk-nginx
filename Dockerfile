@@ -68,6 +68,6 @@ EXPOSE 80
 
 VOLUME ["/usr/local/logs"]  
 
-COPY ./@app /@app
+COPY ./@app @app
 
 CMD nginx -g "daemon off;"
