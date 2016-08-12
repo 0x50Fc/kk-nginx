@@ -1,73 +1,29 @@
-FROM library/ubuntu:14.04
+FROM alpine:3.4
 
-COPY ./etc/sources.list /etc/apt/sources.list
+MAINTAINER hailongz "hailongz@qq.com"
 
-RUN apt-get clean
+ENV NGINX_VERSION 1.10.1-r1
 
-RUN apt-get upgrade
+RUN apk add --update nginx-lua=$NGINX_VERSION bash && \
+    rm -rf /var/cache/apk/* 
 
-RUN apt-get update
+RUN ln -sf /dev/stdout /var/log/nginx/access.log
+RUN ln -sf /dev/stderr /var/log/nginx/error.log
 
-RUN apt-get install -f -y libreadline-dev make gcc libncurses5-dev libpcre3 libpcre3-dev openssl libssl-dev libz-dev
+RUN mkdir /run/nginx
 
-COPY ./lua /opt/lua
+VOLUME ["/var/log/nginx"]
 
-COPY ./luajit /opt/luajit
+WORKDIR /etc/nginx
 
-COPY ./lua-nginx-module /opt/lua-nginx-module
+EXPOSE 80 443
 
-COPY ./ngx_devel_kit /opt/ngx_devel_kit
-
-COPY ./nginx /opt/nginx
-
-WORKDIR /opt/lua
-
-RUN make linux
-
-RUN make install
-
-WORKDIR /opt/luajit
-
-RUN make
-
-RUN make install
-
-RUN ln -s /usr/local/lib/libluajit-5.1.so.2 /lib64/libluajit-5.1.so.2
-
-RUN ln -s /usr/local/lib/libluajit-5.1.so.2 /lib/libluajit-5.1.so.2
-
-ENV LUAJIT_LIB=/usr/local/lib
-
-ENV LUAJIT_INC=/usr/local/include/luajit-2.0
-
-WORKDIR /opt/nginx
-
-RUN ./configure --prefix=/usr/local --add-module=/opt/ngx_devel_kit --add-module=/opt/lua-nginx-module
-
-RUN make -j2
-
-RUN make install
-
-WORKDIR /opt
-
-RUN rm -rf lua
-RUN rm -rf luajit
-RUN rm -rf lua-nginx-module
-RUN rm -rf ngx_devel_kit
-RUN rm -rf nginx
-
-WORKDIR /usr/local
+CMD ["nginx", "-g", "daemon off;"]
 
 COPY ./conf.d conf.d
 
-COPY ./lib/lua lib/lua
+COPY ./lib/lua /lib/lua
 
-COPY ./conf/nginx.conf conf/nginx.conf
+COPY ./nginx.conf nginx.conf
 
-EXPOSE 80
-
-VOLUME ["/usr/local/logs"]  
-
-COPY ./@app @app
-
-CMD nginx -g "daemon off;"
+COPY ./@app /@app
