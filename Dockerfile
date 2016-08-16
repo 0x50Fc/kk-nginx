@@ -14,8 +14,6 @@ RUN ln -sf /dev/stderr /var/log/nginx/error.log
 
 RUN mkdir /run/nginx
 
-VOLUME ["/var/log/nginx"]
-
 WORKDIR /etc/nginx
 
 EXPOSE 80 443
