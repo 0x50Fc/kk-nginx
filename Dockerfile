@@ -2,6 +2,8 @@ FROM alpine:3.4
 
 MAINTAINER hailongz "hailongz@qq.com"
 
+RUN echo "Asia/shanghai" >> /etc/timezone
+
 ENV NGINX_VERSION 1.10.1-r1
 
 RUN apk add --update nginx-lua=$NGINX_VERSION bash && \
