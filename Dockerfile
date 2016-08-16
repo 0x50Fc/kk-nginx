@@ -9,11 +9,11 @@ ENV NGINX_VERSION 1.10.1-r1
 RUN apk add --update nginx-lua=$NGINX_VERSION bash && \
     rm -rf /var/cache/apk/* 
 
-RUN mkdir /var/log/nginx
-
 RUN ln -sf /dev/stdout /var/log/nginx/access.log
 
 RUN ln -sf /dev/stderr /var/log/nginx/error.log
+
+RUN ls /var/log/nginx
 
 RUN mkdir /run/nginx
 
