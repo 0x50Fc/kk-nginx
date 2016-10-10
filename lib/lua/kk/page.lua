@@ -34,7 +34,7 @@ return function(page,__text)
 					else
 						return '';
 					end
-				elseif v ~= nil then
+				elseif fn ~= nil then
 					return fn .. '';
 				else
 					return '';
